@@ -34,10 +34,31 @@ const server = http.createServer((req, resp) => {
             })
         // console.log(msg1)
        
-    } else if (path == '/messages' && req.method == 'POST') {
+    } else if (path == '/messages' && req.method == 'POST'){
+        console.log('here')
+        console.log(req.body)
+        const text = url.searchParams.get('text')
+        fs.readFile('messages.json', (err, data) => {
+            if (err) {
+                res.write(500)
+                resp.end()
+            }
+            
+            data = JSON.parse(data)
+            const message = {
+                text: text,
+                username: data.username
+            }
+            data.messages.push(message)
+
+            
+        })
+        resp.writeHead(200, { 'Content-Type': 'application/json' })
+        resp.end()
+        
 
     } else{ //(path == '/massages') 
-        resp.writeHead(404, {'Content-Type': 'application/json'})
+        resp.writeHead(404)
         resp.write('Nice try, hehe')
         resp.end()
     }
